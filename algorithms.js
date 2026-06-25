@@ -142,6 +142,10 @@
     function merge(lo, mid, hi) {
       const L = a.slice(lo, mid + 1), R = a.slice(mid + 1, hi + 1);
       let i = 0, j = 0, k = lo;
+      // Only the outermost merge (the whole array) places elements in their FINAL
+      // global positions; in any smaller merge the values are sorted within the
+      // sub-range but not yet globally final, so they must NOT turn green.
+      const isFinal = (lo === 0 && hi === n - 1);
       // Keep the unplaced tail a[k..hi] showing the remaining L then R values, so
       // the picture stays a true permutation (two halves draining into the front).
       const refreshTail = () => {
@@ -161,9 +165,10 @@
         f(from === 'left' ? 'merge_left' : 'merge_right',
           `${from === 'left' ? 'Left' : 'Right'} value ${placed} wins — place it at position ${k - 1}.`,
           { [k - 1]: 'swap' }, [lo, hi]);
+        if (isFinal) sorted.add(k - 1);   // locked into its final spot (added after the frame so it greens next step)
       }
-      while (i < L.length) { a[k] = L[i]; i++; const pos = k; k++; refreshTail(); f('merge_copy', `Copy leftover left value ${a[pos]} to position ${pos}.`, { [pos]: 'swap' }, [lo, hi]); }
-      while (j < R.length) { a[k] = R[j]; j++; const pos = k; k++; refreshTail(); f('merge_copy', `Copy leftover right value ${a[pos]} to position ${pos}.`, { [pos]: 'swap' }, [lo, hi]); }
+      while (i < L.length) { a[k] = L[i]; i++; const pos = k; k++; refreshTail(); f('merge_copy', `Copy leftover left value ${a[pos]} to position ${pos}.`, { [pos]: 'swap' }, [lo, hi]); if (isFinal) sorted.add(pos); }
+      while (j < R.length) { a[k] = R[j]; j++; const pos = k; k++; refreshTail(); f('merge_copy', `Copy leftover right value ${a[pos]} to position ${pos}.`, { [pos]: 'swap' }, [lo, hi]); if (isFinal) sorted.add(pos); }
       f('merged', `Sub-list [${lo}..${hi}] is now merged and in order.`, {}, [lo, hi]);
     }
 
