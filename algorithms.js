@@ -71,7 +71,9 @@
 
     // The "key" is held in a variable; we render it sitting in the current hole so
     // the picture is always a true permutation (the key bar travels left).
-    sorted.add(0);
+    // NOTE: insertion sort never locks an element into its FINAL position until the
+    // whole pass is done (any element can still be shifted right by a later, smaller
+    // key), so nothing is marked "sorted" (green) until the end.
     f('start', 'The first element on its own is already a sorted sub-list.', {});
 
     for (let i = 1; i < n; i++) {
@@ -92,12 +94,11 @@
         f('inner_compare', `Is A[${hole - 1}] = ${a[hole - 1]} greater than key ${key}?  No — the key stops here.`,
           { [hole - 1]: 'compare', [hole]: 'key' });
       }
-      sorted.add(i);
-      f('insert', `Drop key ${key} into position ${hole}. A[0..${i}] is now sorted.`, { [hole]: 'key' });
+      f('insert', `Drop key ${key} into position ${hole}. The left part A[0..${i}] is sorted so far.`, { [hole]: 'key' });
     }
 
     for (let i = 0; i < n; i++) sorted.add(i);
-    f('done', 'Finished — the whole list is sorted.', {});
+    f('done', 'Finished — every element is now in its final place.', {});
     return frames;
   }
 
