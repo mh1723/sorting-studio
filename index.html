@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sorting Studio — an interactive guide to sorting algorithms</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="title-block">
+      <h1>The Sorting <span class="amp">Studio</span></h1>
+      <p class="subtitle">
+        Watch four classic sorting algorithms work, side by side and perfectly in step.
+        Set the list, pick the methods, choose a language, and press play.
+      </p>
+    </div>
+    <div class="crest">Insertion · Selection<br />Merge · Quick</div>
+  </header>
+
+  <!-- ------------------------------ controls ------------------------------ -->
+  <section class="controls" aria-label="Controls">
+
+    <!-- row 1: array + algorithms -->
+    <div class="controls-row">
+      <div class="group">
+        <span class="label">Array size</span>
+        <input type="range" id="lenSlider" min="4" max="24" value="9" aria-label="Array size" />
+        <span class="readout"><b id="lenValue">9</b> items</span>
+      </div>
+
+      <div class="group">
+        <span class="label">Shape</span>
+        <select id="presetSelect" aria-label="Array shape preset">
+          <option value="random">Random</option>
+          <option value="nearly">Nearly sorted</option>
+          <option value="reversed">Reversed</option>
+          <option value="few">Few unique</option>
+        </select>
+        <button class="btn" id="regenBtn" title="Make a new list">↻ Regenerate</button>
+      </div>
+
+      <div class="group">
+        <span class="label">View</span>
+        <div class="lang-toggle" id="layoutToggle" role="group" aria-label="Panel layout">
+          <button data-layout="grid" class="active">2 × 2 grid</button>
+          <button data-layout="row">Side by side</button>
+        </div>
+      </div>
+
+      <div class="group" style="margin-left:auto;">
+        <span class="label">Methods</span>
+        <div class="chips" id="algoChips" role="group" aria-label="Choose sorting methods"></div>
+      </div>
+    </div>
+
+    <!-- row 2: transport -->
+    <div class="controls-row">
+      <div class="group">
+        <button class="btn icon" id="resetBtn" title="Back to start" aria-label="Reset to start">⏮</button>
+        <button class="btn icon" id="backBtn" title="Step back" aria-label="Step back">◀</button>
+        <button class="btn primary icon" id="playBtn" title="Play / pause" aria-label="Play">▶</button>
+        <button class="btn icon" id="fwdBtn" title="Step forward" aria-label="Step forward">▶▮</button>
+      </div>
+
+      <div class="group">
+        <span class="label">Speed</span>
+        <input type="range" id="speedSlider" min="1" max="8" step="1" value="1" aria-label="Steps per second" />
+        <span class="readout"><b id="speedValue">1</b> / sec</span>
+      </div>
+
+      <div class="group" style="flex:1 1 260px;">
+        <span class="label">Step</span>
+        <input type="range" id="scrubber" min="0" max="0" value="0" aria-label="Scrub through steps" />
+        <span class="readout">Step <b id="stepValue">0</b> / <span id="stepMax">0</span></span>
+      </div>
+    </div>
+
+    <!-- row 3: legend -->
+    <div class="controls-row">
+      <div class="legend" aria-label="Color legend">
+        <span class="swatch"><span class="dot d-default"></span>Unsorted</span>
+        <span class="swatch"><span class="dot d-compare"></span>Comparing</span>
+        <span class="swatch"><span class="dot d-swap"></span>Moving / swapping</span>
+        <span class="swatch"><span class="dot d-pivot"></span>Pivot</span>
+        <span class="swatch"><span class="dot d-key"></span>Key / current min</span>
+        <span class="swatch"><span class="dot d-boundary"></span>Partition boundary</span>
+        <span class="swatch"><span class="dot d-sorted"></span>Sorted</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------- panels ------------------------------- -->
+  <div id="srStatus" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <main class="panels" id="panels"></main>
+
+  <footer class="colophon">Built for curious learners — compare, pause, and rewind until each idea clicks.</footer>
+
+  <script src="algorithms.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
