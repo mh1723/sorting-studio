@@ -123,7 +123,8 @@
         const t = a[i]; a[i] = a[m]; a[m] = t;
         f('swap', `Swap the smallest (${a[i]}) into position ${i}.`, { [i]: 'swap', [m]: 'swap' });
       } else {
-        f('swap', `A[${i}] = ${a[i]} is already the smallest — no swap needed.`, { [i]: 'swap' });
+        // already in place — show it as the (gold) current-min staying put, NOT a red move
+        f('swap', `A[${i}] = ${a[i]} is already the smallest — it stays put, no swap needed.`, { [i]: 'min' });
       }
       sorted.add(i);
       f('placed', `Position ${i} is now fixed in its final place.`, {});
@@ -212,11 +213,18 @@
           }
         }
       }
-      const t = a[i + 1]; a[i + 1] = a[hi]; a[hi] = t;
-      f('place_pivot', `Put the pivot in its final spot: position ${i + 1}.`, { [i + 1]: 'swap', [hi]: 'swap' }, [lo, hi]);
-      sorted.add(i + 1);
-      f('pivot_placed', `${a[i + 1]} is now locked in its final sorted position.`, { [i + 1]: 'sorted' }, [lo, hi]);
-      return i + 1;
+      const dest = i + 1;
+      const pivotMoved = (dest !== hi);
+      const t = a[dest]; a[dest] = a[hi]; a[hi] = t;
+      if (pivotMoved) {
+        f('place_pivot', `Put the pivot in its final spot: position ${dest}.`, { [dest]: 'swap', [hi]: 'swap' }, [lo, hi]);
+      } else {
+        // pivot was already at the end of its range — no actual move, keep it the (blue) pivot
+        f('place_pivot', `The pivot is already in its final spot (position ${dest}) — no swap needed.`, { [dest]: 'pivot' }, [lo, hi]);
+      }
+      sorted.add(dest);
+      f('pivot_placed', `${a[dest]} is now locked in its final sorted position.`, { [dest]: 'sorted' }, [lo, hi]);
+      return dest;
     }
 
     function qsort(lo, hi) {
